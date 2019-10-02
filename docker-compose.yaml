@@ -1,0 +1,27 @@
+version: '3.6'
+
+services:
+
+  insurance-web:
+    build:
+      context: insurance
+      dockerfile: Dockerfile
+    volumes:
+      - './insurance:/usr/src/insurance'
+    ports:
+      - 8000:8000
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@insurance-db:5432/insurance_dev
+      - DJANGO_SETTINGS_MODULE=app.settings.development
+    depends_on:
+      - insurance-db
+
+  insurance-db:
+    build:
+      context: insurance/db
+      dockerfile: Dockerfile
+    ports:
+      - 5436:5432
+    environment:
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=postgres
